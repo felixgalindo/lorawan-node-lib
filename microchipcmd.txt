@@ -1,0 +1,28 @@
+mac set appeui 4ce0ddf054fccd2a
+mac set appkey bd32aab41c54175e9060d86f3a8b7f49
+mac save
+mac join otaa
+
+mac get appkey
+mac get appeui
+mac join otaa
+
+
+0-7,64 subband 1 
+8-15,65 subband 2
+16-23,66 subband 3
+24-31,67 subband 4
+32-39,68 subband 5
+40-47,69 subband 6
+48-55,70 subband 7 enabled only
+56-63,71 subband 8
+
+
+
+mac set ch status 0 off
+mac set ch status 1 off
+mac set ch status 2 off
+mac set ch status 3 off
+mac set ch status 4 off
+
+mac set ch status 4 off
