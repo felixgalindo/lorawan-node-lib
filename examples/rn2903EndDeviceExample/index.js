@@ -23,23 +23,29 @@ var rxCount = 0;
 //var dataToSend = "Hello World";
 var dataToSend = process.argv[2];
 if (process.argv[2] !== undefined && process.argv[2] !== null) {} else {
-	var dataToSend = "Hello World Hello World Hello World Hello World";
+	var dataToSend = "Hello World";
 	//var dataToSend = '\u0007';
 	//var dataToSend = "Hello World";
 }
 
+//Contruct a hex encoded json object string 
 console.log("dataToSend:", dataToSend);
+var payload = {
+	msg: dataToSend
+};
+payload = JSON.stringify(payload);
+var string = new Buffer(payload);
+string = string.toString("hex");
 
+//Construct message object containing payload and message configurations 
 msgObj = {
-	payload: dataToSend,
-	ackEnabled: false,
-	port: 4
+	payload: payload, //some string, in this case, a hex encoded json object string 
+	ackEnabled: true,
+	port: 1 //bug with receiving downlinks when port is not 1, see RN2903.prototype.sendData 
 };
 
 networkObj = {
 	networkId: "4ce0ddf054fccd2a", //multitech gateway
-	// networkId: "AA555A0000000000",
-	// networkKey: "",
 	networkKey: "bd32aab41c54175e9060d86f3a8b7f49",
 	joinMode: "otaa"
 		// joinMode: "abp"
@@ -66,7 +72,7 @@ setTimeout(function() {
 		// 	return device.macGetRx2();
 		// })
 		.then(function() {
-			return device.macSetRx2(8, 923300000); 
+			return device.macSetRx2(8, 923300000);
 		})
 
 	// 	//Private mode settings for raspberry pi gateway (does not work)
@@ -135,7 +141,7 @@ var messageLoop = function() {
 	setTimeout(function() {
 		network.networkSendMessage(msgObj)
 			.then(function(response) {
-				//console.log("send message response", response);
+				console.log("send message response", response);
 				if (response.length) { //Check for rx messages
 					for (var j = 0; j < response.length; j++) {
 						var data = hex_to_ascii(response[j]);
@@ -179,7 +185,7 @@ var setSubBandChannels = function() {
 			// 			console.log("err", err);
 			// 		});
 			// } else {
-			if ((ch >= 8) && ch < 64) { //for risinghf/raspberry pi gateway
+			if ((ch >= 8) && ch < 64) { //for raspberry pi gateway
 				device.macSetChannelStatus(ch, "off")
 					.catch(function(err) {
 						console.log("err", err);
