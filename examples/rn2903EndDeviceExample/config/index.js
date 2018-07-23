@@ -6,8 +6,8 @@
 const options = {
 	radioType: "rn2903",
 	serialPortOptions: {
-		// serialport: "/dev/ttyACM0",
-		serialport: "/dev/tty.usbmodem146221",
+		// serialport: "/dev/ttyUSB0",
+		serialport: "/dev/tty.usbserial",
 		//serialport: "/dev/tty.usbmodem641",
 		//serialport: "/dev/tty.usbmodem411",
 		baudRate: 57600

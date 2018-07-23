@@ -37,12 +37,14 @@ msgObj = {
 };
 
 networkObj = {
-	networkId: "FelixLora",
-	networkKey: "password123"
+	networkId: "000CC68FFFE1609B",
+	networkKey: "bd32aab41c54175e9060d86f3a8b7f48"
 };
 
 var msgCount = 0;
 var deviceId = '';
+
+network.networkSendMessage(msgObj);
 //var dataToSend = "Hello World Hello World Hello World Hello World Hello";
 //Call radio api to init settings
 setTimeout(function() {
@@ -66,7 +68,7 @@ setTimeout(function() {
 			return mDot.atSetJoinRetries(0); //off for now later maybe Retry to rejoin 255 times 
 		})
 		.then(function() {
-			return mDot.atSetFrequencySubBand(7); //sub-band 7
+			return mDot.atSetFrequencySubBand(1); //sub-band 7
 		})
 		.then(function() {
 			return mDot.atSetPublicNetworkMode(1);

@@ -40,33 +40,34 @@ string = string.toString("hex");
 //Construct message object containing payload and message configurations 
 msgObj = {
 	payload: payload, //some string, in this case, a hex encoded json object string 
-	ackEnabled: true,
+	ackEnabled: false,
 	port: 1 //bug with receiving downlinks when port is not 1, see RN2903.prototype.sendData 
 };
 
 networkObj = {
-	networkId: "4ce0ddf054fccd2a", //multitech gateway
+	networkId: "000CC68FFFE1609B", //Office App
+	//000CC68FFFE16093 //home app
 	networkKey: "bd32aab41c54175e9060d86f3a8b7f49",
 	joinMode: "otaa"
-		// joinMode: "abp"
+	// joinMode: "abp"
 };
 
 
 setTimeout(function() {
 	device.sysFactoryReset()
 		.then(function() {
-			return device.macSetADR("off"); //Set adr to off
+			return device.macSetADR("on"); //Set adr to off
 		})
 		.then(function() {
 			return setSubBandChannels(); //enable all channels for subband 7. disable rest.
 		})
 
-	// Public mode settings for raspberry pi gateway (works)
-	.then(function() {
+		// Public mode settings for raspberry pi gateway (works)
+		.then(function() {
 			return device.macSetSyncWord("34"); //Set sync word
 		})
 		.then(function() {
-			return device.macSetRxDelay1(5000);
+			return device.macSetRxDelay1(1000);
 		})
 		// .then(function() {
 		// 	return device.macGetRx2();
@@ -75,32 +76,31 @@ setTimeout(function() {
 			return device.macSetRx2(8, 923300000);
 		})
 
-	// 	//Private mode settings for raspberry pi gateway (does not work)
-	// .then(function() {
-	// 		return device.macSetSyncWord("12"); //Set sync word
-	// 	})
-	// 	.then(function() {
-	// 		return device.macSetRxDelay1(1000);
-	// 	})
-	// 	// .then(function() {
-	// 	// 	return device.macGetRx2();
-	// 	// })
-	// 	.then(function() {
-	// 		return device.macSetRx2(12, 923300000); 
-	// 	})
+		// 	//Private mode settings for raspberry pi gateway (does not work)
+		// .then(function() {
+		// 		return device.macSetSyncWord("12"); //Set sync word
+		// 	})
+		// 	.then(function() {
+		// 		return device.macSetRxDelay1(1000);
+		// 	})
+		// 	// .then(function() {
+		// 	// 	return device.macGetRx2();
+		// 	// })
+		// 	.then(function() {
+		// 		return device.macSetRx2(12, 923300000); 
+		// 	})
 
-	//This is for abp, move this stuff!!!!!
-	.then(function() {
-			return device.macSetDeviceAddress("ABCDEF01");
-		})
+		//This is for abp, move this stuff!!!!!
+		// .then(function() {
+		// 		return device.macSetDeviceAddress("ABCDEF01");
+		// 	})
+		// 	.then(function() {
+		// 		return device.macSetNetworkKey("bd32aab41c54175e9060d86f3a8b7f49");
+		// 	})
 		.then(function() {
-			return device.macSetNetworkKey("bd32aab41c54175e9060d86f3a8b7f49");
+			return device.macGetDeviceEui();
 		})
-		.then(function() {
-			return device.macSetAppSessionKey("bd32aab41c54175e9060d86f3a8b7f49");
-		})
-
-	.then(function(eui) {
+		.then(function(eui) {
 			console.log("dev eui:", eui);
 			return device.macGetDeviceAddress(); //set TX power to 10 (max)
 		})
@@ -116,6 +116,9 @@ setTimeout(function() {
 		})
 		.then(function() {
 			return device.macSetLinkCheck(0); //link check off
+		})
+		.then(function() {
+			return device.macSetADR("on"); //set adr on
 		})
 		.then(function() {
 			return device.macSave(); //save settings
@@ -158,11 +161,19 @@ var messageLoop = function() {
 						});
 				}
 			})
+			.then(function() {
+				device.macGetDr(); //save settings
+			})
+			.then(function() {
+				device.macGetPowerIndex(); //save settings
+			})
 			.catch(function(err) {
 				console.log("err", err);
 			});
+
+
 		messageLoop();
-	}, 5000);
+	}, 60000);
 };
 
 
@@ -205,4 +216,4 @@ var setSubBandChannels = function() {
 
 		}, 100);
 	});
-};
+}

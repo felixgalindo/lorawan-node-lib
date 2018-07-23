@@ -6,7 +6,8 @@
 const options = {
 	radioType: "mDot",
 	serialPortOptions: {
-		serialport: "/dev/ttyUSB0",
+		// serialport: "/dev/ttyUSB0",
+		serialport: "/dev/tty.usbserial-DN01DUAD",
 		baudRate: 115200
 	}
 	//serialport:"/dev/tty.usbserial-DN01DD8Z"
